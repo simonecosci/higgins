@@ -1,21 +1,21 @@
 @echo off
-rem Esempio di automazione quotidiana con Claude Code in modalita' non interattiva.
-rem Copia questo file in daily.cmd, personalizza il prompt e i placeholder <...>,
-rem poi pianificalo con Task Scheduler (vedi README). daily.cmd resta fuori da git
-rem apposta: finisce per contenere il dominio e i percorsi reali del tuo sito.
+rem Example of daily automation with Claude Code in non-interactive mode.
+rem Copy this file to daily.cmd, customise the prompt and the <...> placeholders,
+rem then schedule it with Task Scheduler (see README). daily.cmd stays out of git
+rem on purpose: it ends up containing your site's real domain and paths.
 cd /d "%~dp0"
 if not exist log mkdir log
 set LOGFILE=log\%date:~-4%-%date:~3,2%-%date:~0,2%.log
 
-rem usa il login claude.ai interattivo gia' fatto in precedenza, non una API key di sistema
+rem use the interactive claude.ai login done earlier, not a system API key
 set ANTHROPIC_API_KEY=
 
-echo --- inizio %date% %time% >> "%LOGFILE%"
+echo --- start %date% %time% >> "%LOGFILE%"
 
-rem Il prompt rifa' esplicito ogni passo invece di confidare che CLAUDE.md basti da solo:
-rem in modalita' -p, senza nessuno che confermi via terminale, la routine deve reggersi
-rem in piedi da sola. Il tuo CLAUDE.md resta comunque il posto giusto per le regole di
-rem fondo (tono, categorie, cosa non si inventa mai): qui sotto solo la sequenza operativa.
-call claude -p "Segui la routine quotidiana in <NOME-FILE-CODA>.md: 1) se la coda e' vuota, rigenerala prima di tutto con nuovi argomenti sui temi del sito, senza ripetere niente di gia' pubblicato o scartato (controlla con: ssh <ALIAS-SSH> \"<COMANDO-WP-CLI-DI-LETTURA> post list --post_type=post --fields=post_title --path=<PERCORSO-WORDPRESS>\"). 2) prendi la PRIMA voce della coda; se richiede dati che non hai, spostala in Scartati con il motivo e passa alla successiva - non inventare mai. 3) scrivi il contenuto in contenuti/<slug>.md con il front-matter completo (vedi FORMATO-CONTENUTO.md). 4) verifica che lo slug non esista gia' sul sito. 5) python publish.py --dry-run contenuti/<slug>.md. 6) python publish.py contenuti/<slug>.md, che pubblica online e imposta la copertina; se la copertina non si genera, pubblica comunque il testo e annotalo. 7) sposta la voce da Coda a Pubblicati in <NOME-FILE-CODA>.md con data e ID. 8) cancella contenuti/<slug>.md e immagini/<slug>.png. Ultima riga di output: OGGI: <slug> - id=<id> oppure OGGI: niente - <motivo>." --allowedTools "Read,Write,Edit,Glob,Grep,Bash(python publish.py:*),Bash(python featured.py:*),Bash(rm:*),Bash(ssh <ALIAS-SSH> <COMANDO-WP-CLI-DI-LETTURA> post list:*)" --max-turns 50 --output-format text >> "%LOGFILE%" 2>&1
+rem The prompt spells out every step instead of trusting CLAUDE.md to be enough on its
+rem own: in -p mode, with nobody at a terminal to confirm anything, the routine has to
+rem stand on its own. Your CLAUDE.md is still the right place for the underlying rules
+rem (tone, categories, what must never be invented): below is only the operating sequence.
+call claude -p "Follow the daily routine in topics.md: 1) if the queue is empty, regenerate it first of all with new topics on the site's subjects, without repeating anything already published or skipped (check with: ssh <SSH-ALIAS> \"<READ-ONLY-WP-CLI-COMMAND> post list --post_type=post --fields=post_title --path=<WORDPRESS-PATH>\"). 2) take the FIRST entry in the queue; if it needs data you don't have, move it to Skipped with the reason and go on to the next one - never invent anything. 3) write the content to content/<slug>.md with the complete front-matter (see CONTENT-FORMAT.md). 4) check that the slug doesn't already exist on the site. 5) python publish.py --dry-run content/<slug>.md. 6) python publish.py content/<slug>.md, which publishes it online and sets the cover; if the cover isn't generated, publish the text anyway and note it. 7) move the entry from Queue to Published in topics.md with date and ID. 8) delete content/<slug>.md and images/<slug>.png. Last line of output: TODAY: <slug> - id=<id> or TODAY: nothing - <reason>." --allowedTools "Read,Write,Edit,Glob,Grep,Bash(python publish.py:*),Bash(python featured.py:*),Bash(rm:*),Bash(ssh <SSH-ALIAS> <READ-ONLY-WP-CLI-COMMAND> post list:*)" --max-turns 50 --output-format text >> "%LOGFILE%" 2>&1
 
-echo --- fine %date% %time% exit=%errorlevel% >> "%LOGFILE%"
+echo --- end %date% %time% exit=%errorlevel% >> "%LOGFILE%"

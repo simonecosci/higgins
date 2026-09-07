@@ -1,0 +1,73 @@
+# Editorial plan — example.com
+
+Copy this file to `editorial-plan.md` and replace the entries with your own. It stays out of
+git (it's already in `.gitignore`): it's about your site, not about this tool.
+
+This file is the memory of the blog: what's coming, what has gone out, what was dropped and
+why. It's read at the start of an interactive session to decide what to write today. The
+automation uses a different, shorter file — see "The queue" at the bottom.
+
+Convention: `[T]` technical post · `[C]` post for clients · `[P]` page. Language in brackets.
+Entry titles stay in the language the piece is written in: they are the real titles.
+
+## To write
+
+One line per idea: the title, the angle, and — this is the part that matters — what is still
+missing before it can be written. An idea that needs a number, a client name or a decision
+only you can make is not ready: say so in the entry, so nobody writes it half-invented.
+
+- [C] Why your site is slow, and what can be fixed in a day (EN).
+- [T] Running containers as a non-root user: what it changes in practice (EN).
+- [T] CI/CD for Laravel with Jenkins and Docker: the flow I actually use (EN).
+  Needs the real pipeline steps — don't write it from memory.
+- [C] ¿Cuánto cuesta una web? Lo que cambia el precio (ES). First piece for the local market.
+
+## Interactive session only
+
+Things that must not be published unattended: rewrites of pages that already exist, anything
+touching client work, anything where a wrong call is expensive.
+
+- [P] Services page — full rewrite (EN). It already exists online (ID 000): upload it as a
+  draft and go through it together before publishing.
+
+## Written
+
+The record of what went out. Keep the date, the WordPress ID and the category: it's what stops
+the same topic from being written twice, and it's how you find the post later.
+Also note where the facts came from — a repo, a changelog, a real project — so that a year from
+now it's clear the post wasn't invented.
+
+- [T] Publishing WordPress from Markdown, over SSH (EN).
+  Written and published on 2026-01-15 — ID 000, category Programming (5).
+  `content/publishing-wordpress-from-markdown.md`. Facts taken from the repo itself.
+  Cover generated (Cloudflare) and set on 2026-01-15, attachment id=000.
+
+- [C] Brochure site or e-commerce: how to tell what your business needs (EN).
+  Written on 2026-01-10, **published on 2026-01-11** — ID 000, category Websites (00).
+  `content/brochure-site-or-ecommerce.md`.
+
+## Dropped
+
+Ideas that didn't hold up, with the reason. They live here so they don't get proposed again in
+six months, and so that it's clear what would have to change for them to come back.
+
+- [C] How much does a website cost in 2026 (EN). Needs real price ranges: without them the post
+  betrays its own title, and making them up would mean publishing commercial terms that don't
+  exist. Move it back to "To write" when the numbers are there.
+
+## Open technical notes
+
+Optional, but useful: problems found while publishing and how they were solved. Strike through
+the ones that are fixed instead of deleting them — it's the fastest way to avoid debugging the
+same thing twice.
+
+- ~~Uploads failed with a database error on non-ASCII characters~~ **Fixed on 2026-01-12.**
+  It was the stdin encoding on Windows; `publish.py:wp()` now forces UTF-8.
+
+## The queue
+
+The daily automation (`daily.cmd`) does **not** read this file: it reads a shorter queue file
+with three sections — Queue, Published, Skipped — takes the first entry and moves it to
+Published once the post is online. Keep the two separate: this plan is where *you* think,
+the queue is what the automation consumes. When an idea from here is ready to be written
+unattended, copy it into the queue.

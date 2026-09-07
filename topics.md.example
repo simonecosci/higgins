@@ -1,0 +1,70 @@
+# Topics — the queue
+
+Copy this file to `topics.md` and replace the entries with your own. It stays out of git
+(it's already in `.gitignore`): it's about your site, not about this tool.
+
+This is the file the automation consumes. Every day `daily.cmd` takes **the first** entry of
+the queue, writes the post, publishes it with its cover and moves the entry to "Published".
+Keep it separate from `editorial-plan.md`: that one is where you think about the blog, this
+one is a work queue that a script empties without asking anybody.
+
+**The cycle never stops**: when the queue empties, `daily.cmd` regenerates new topics on its
+own before writing that day's post. `weekly.cmd` is only a top-up: it adds the missing entries
+to bring the queue back to N and does not touch the ones already there, so the two don't step
+on each other's toes.
+
+Convention: `[T]` technical · `[C]` for clients. In brackets, language and WordPress category
+(numeric ID — read them with `wp term list category --fields=term_id,name`). Entry titles stay
+in the language the post is written in.
+
+Subjects: list here the handful of themes the blog actually covers, so the regeneration stays
+on topic instead of drifting. Anything outside them shouldn't end up in the queue.
+
+The rule that holds it all together: **no invented details**. If a topic needs numbers, client
+names or project decisions that aren't in the repo, it doesn't get written — it goes to
+"Skipped" with the reason and the next one is taken. A shorter queue beats one full of weak
+topics.
+
+### Rules for security and CVE posts
+
+Keep a block like this if the blog covers security: on these subjects a wrong detail isn't a
+typo, it's advice that leaves someone with a hole open, or costs them a day on a problem they
+don't have. The automation has no judgement of its own — the rules have to be written down.
+
+- **Every fact comes from a primary source verified while writing**: NVD/MITRE for the CVE, the
+  vendor's advisory, the project's changelog. Nothing from memory, ever.
+- The post must carry: **the CVE identifier, the affected versions, the version that fixes it,
+  a link to the source**. If even one of those can't be verified, the topic is skipped.
+- **Defensive angle**: what to check, how to mitigate, how to notice it. No exploits, no
+  proof-of-concept.
+- Only **recent and relevant** CVEs for the stack the site talks about. A critical CVE on
+  something no reader uses is of no use to anyone.
+
+This is also why `daily.cmd` and `weekly.cmd` have `WebSearch` and `WebFetch` among their
+`allowedTools`: without them, a post about a CVE would be made up.
+
+## Queue
+
+The next post is the first entry. One line for the angle is enough — but it has to be enough
+for someone to write the post without asking you anything.
+
+- **[T] Running containers as a non-root user: why it matters and how to do it** (EN, 00) —
+  unprivileged user, read-only filesystem, capabilities. Practical hardening angle, on a real
+  PHP-FPM + nginx image. No CVE to verify: it can be written right away.
+- **[C] Why your site is slow, and what can be fixed in a day** (EN, 00) — images, caching,
+  hosting. For a business owner, not for a developer.
+
+## Skipped
+
+_(entries dropped by the automatic routine, with the reason: put them back in the queue when
+the obstacle is gone)_
+
+- **[T] Our deployment pipeline, step by step** (EN, 00) — needs the real pipeline steps, which
+  aren't in the repo. Skipped on 2026-01-14.
+
+## Published
+
+_(moved here by `daily.cmd` with date and ID, so they aren't repeated the following week)_
+
+- **[T] Publishing WordPress from Markdown, over SSH** (EN, 00) —
+  2026-01-15, id=000, cover 000.

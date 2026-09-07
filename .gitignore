@@ -1,31 +1,34 @@
-# Segreti: chiavi API dei provider immagine
+# Secrets: API keys of the image providers
 .env
 .env.*
 !.env.example
 
-# Configurazione locale: punta a un server e un WP reali
+# Local configuration: points at a real server and a real WP
 config.yml
 
-# Automazione locale: dominio, percorsi e utenti reali incorporati nel prompt
+# Local automation: real domain, paths and users embedded in the prompt
 daily.cmd
 weekly.cmd
 
-# Contenuti ed elaborati: dati di lavoro, non codice del progetto
-contenuti/*
-!contenuti/.gitkeep
-immagini/*
-!immagini/.gitkeep
+# Content and artefacts: working data, not project code
+content/*
+!content/.gitkeep
+images/*
+!images/.gitkeep
 log/
 
-# Piano editoriale e istruzioni di progetto: specifici del sito che li usa
-argomenti.md
-piano-editoriale.md
+# Editorial plan and project instructions: specific to the site using them
+topics.md
+editorial-plan.md
 home-simonecosci-copy.md
 CLAUDE.md
 
 # Python
 __pycache__/
 *.pyc
+
+# Tooling: local indexes and caches, machine-specific
+.serena/
 
 # OS / editor
 .DS_Store

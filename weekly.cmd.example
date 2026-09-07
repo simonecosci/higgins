@@ -1,15 +1,15 @@
 @echo off
-rem Rinforzo settimanale: riporta la coda a N voci senza toccare quelle gia' presenti.
-rem Copia in weekly.cmd, personalizza i placeholder <...>. Anche questo resta fuori da
-rem git: stessa ragione di daily.cmd.example.
+rem Weekly top-up: brings the queue back to N entries without touching the ones already there.
+rem Copy to weekly.cmd, customise the <...> placeholders. This one stays out of git
+rem as well: same reason as daily.cmd.example.
 cd /d "%~dp0"
 if not exist log mkdir log
-set LOGFILE=log\settimana-%date:~-4%-%date:~3,2%-%date:~0,2%.log
+set LOGFILE=log\week-%date:~-4%-%date:~3,2%-%date:~0,2%.log
 
 set ANTHROPIC_API_KEY=
 
-echo --- inizio %date% %time% >> "%LOGFILE%"
+echo --- start %date% %time% >> "%LOGFILE%"
 
-call claude -p "Riporta a <N> le voci della sezione Coda in <NOME-FILE-CODA>.md, aggiungendo solo quelle che mancano: le voci gia' in coda non si toccano ne' si cancellano. Se la coda e' gia' piena, non fare niente e dillo. Non ripetere niente che compaia gia' in Pubblicati o Scartati, ne' fra i post gia' online (controlla con: ssh <ALIAS-SSH> \"<COMANDO-WP-CLI-DI-LETTURA> post list --post_type=post --fields=post_title --path=<PERCORSO-WORDPRESS>\"). Se non trovi abbastanza argomenti che reggano senza inventare, aggiungine meno e annota in Scartati che ne servono di nuovi. Ultima riga di output: SETTIMANA: coda a N argomenti." --allowedTools "Read,Write,Edit,Glob,Grep,Bash(ssh <ALIAS-SSH> <COMANDO-WP-CLI-DI-LETTURA> post list:*)" --max-turns 40 --output-format text >> "%LOGFILE%" 2>&1
+call claude -p "Bring the Queue section in topics.md back to <N> entries, adding only the missing ones: entries already in the queue must not be touched or deleted. If the queue is already full, do nothing and say so. Don't repeat anything that already appears in Published or Skipped, nor among the posts already online (check with: ssh <SSH-ALIAS> \"<READ-ONLY-WP-CLI-COMMAND> post list --post_type=post --fields=post_title --path=<WORDPRESS-PATH>\"). If you can't find enough topics that hold up without inventing anything, add fewer and note in Skipped that new topics are needed. Last line of output: WEEK: queue at N topics." --allowedTools "Read,Write,Edit,Glob,Grep,Bash(ssh <SSH-ALIAS> <READ-ONLY-WP-CLI-COMMAND> post list:*)" --max-turns 40 --output-format text >> "%LOGFILE%" 2>&1
 
-echo --- fine %date% %time% exit=%errorlevel% >> "%LOGFILE%"
+echo --- end %date% %time% exit=%errorlevel% >> "%LOGFILE%"
