@@ -245,6 +245,21 @@ per fare numero**. Meglio una coda più corta di una piena di argomenti deboli.
 Copia i due `.example` senza l'estensione, sostituisci i placeholder `<...>` e
 pianificali con lo scheduler del tuo sistema (`schtasks` su Windows, `cron` altrove).
 
+### Bozza invece di pubblicazione diretta
+
+Chi preferisce rivedere ogni contenuto prima che vada online può far girare
+l'automazione in modalità bozza: basta aggiungere `--draft` al comando `python
+publish.py` dentro il prompt di `daily.cmd` (`publish.py` lo supporta già — vedi
+"Pubblicare" più sopra). Il post nasce come bozza, **con la copertina già generata e
+impostata**, pronto per essere riletto e pubblicato a mano da wp-admin.
+
+Un dettaglio a cui fare attenzione se lo si adotta: il controllo anti-doppioni nel
+prompt interroga `wp post list` senza specificare lo stato, che per default mostra
+solo i contenuti pubblicati — una bozza non ci comparirebbe. Passando a `--draft`
+conviene aggiungere `--post_status=publish,draft` a quel controllo (sia in
+`daily.cmd` che in `weekly.cmd`), altrimenti la coda rischia di riproporre lo stesso
+argomento di una bozza già scritta ma non ancora pubblicata.
+
 Restano fuori da git anche loro (finiscono per contenere dominio e percorsi reali),
 insieme a `config.yml` e `.env`. Sul contenuto del prompt: la versione reale che uso
 è più dettagliata di questi esempi — include per esempio le regole per verificare
