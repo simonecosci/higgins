@@ -175,9 +175,24 @@ Un paio di cose imparate sul campo, per non perdere tempo a riscoprirle:
 
 `daily.cmd.example` e `weekly.cmd.example` mostrano come lanciare Claude Code in
 modalità non interattiva (`claude -p`) per scrivere e pubblicare un contenuto al
-giorno da una coda, con log su file e pulizia automatica. Copiali senza l'estensione
-`.example`, sostituisci i placeholder `<...>` e pianificali con lo scheduler del tuo
-sistema (`schtasks` su Windows, `cron` altrove).
+giorno da una coda, con log su file e pulizia automatica.
+
+**Il ciclo si autoalimenta.** La coda vive in un file Markdown (`<NOME-FILE-CODA>.md`
+nell'esempio — nel mio caso `argomenti.md`) con tre sezioni: Coda, Pubblicati,
+Scartati. Ogni giorno `daily.cmd` prende la prima voce, la scrive, la pubblica, e la
+sposta in Pubblicati. **Se la coda è vuota, prima di scrivere il post del giorno se ne
+rigenera una nuova da sola** — nuovi argomenti, mai un doppione di quello che è già
+in Pubblicati, in Scartati o online sul sito (lo script lo verifica interrogando
+WordPress). Non serve mai riempirla a mano perché continui a girare; `weekly.cmd` è
+solo un rinforzo opzionale, che la riporta a N voci senza toccare quelle già presenti.
+
+La regola che tiene in piedi tutto: se un argomento richiederebbe un dato che lo
+script non ha (un dettaglio tecnico, un numero, un fatto verificabile), quella voce
+finisce in Scartati con il motivo, e si passa alla successiva — **niente si inventa
+per fare numero**. Meglio una coda più corta di una piena di argomenti deboli.
+
+Copia i due `.example` senza l'estensione, sostituisci i placeholder `<...>` e
+pianificali con lo scheduler del tuo sistema (`schtasks` su Windows, `cron` altrove).
 
 Restano fuori da git anche loro (finiscono per contenere dominio e percorsi reali),
 insieme a `config.yml` e `.env`. Sul contenuto del prompt: la versione reale che uso
