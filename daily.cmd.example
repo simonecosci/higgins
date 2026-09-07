@@ -1,0 +1,21 @@
+@echo off
+rem Esempio di automazione quotidiana con Claude Code in modalita' non interattiva.
+rem Copia questo file in daily.cmd, personalizza il prompt e i placeholder <...>,
+rem poi pianificalo con Task Scheduler (vedi README). daily.cmd resta fuori da git
+rem apposta: finisce per contenere il dominio e i percorsi reali del tuo sito.
+cd /d "%~dp0"
+if not exist log mkdir log
+set LOGFILE=log\%date:~-4%-%date:~3,2%-%date:~0,2%.log
+
+rem usa il login claude.ai interattivo gia' fatto in precedenza, non una API key di sistema
+set ANTHROPIC_API_KEY=
+
+echo --- inizio %date% %time% >> "%LOGFILE%"
+
+rem Il prompt rifa' esplicito ogni passo invece di confidare che CLAUDE.md basti da solo:
+rem in modalita' -p, senza nessuno che confermi via terminale, la routine deve reggersi
+rem in piedi da sola. Il tuo CLAUDE.md resta comunque il posto giusto per le regole di
+rem fondo (tono, categorie, cosa non si inventa mai): qui sotto solo la sequenza operativa.
+call claude -p "Segui la routine quotidiana in <NOME-FILE-CODA>.md: 1) se la coda e' vuota, rigenerala prima di tutto con nuovi argomenti sui temi del sito, senza ripetere niente di gia' pubblicato o scartato (controlla con: ssh <ALIAS-SSH> \"<COMANDO-WP-CLI-DI-LETTURA> post list --post_type=post --fields=post_title --path=<PERCORSO-WORDPRESS>\"). 2) prendi la PRIMA voce della coda; se richiede dati che non hai, spostala in Scartati con il motivo e passa alla successiva - non inventare mai. 3) scrivi il contenuto in contenuti/<slug>.md con il front-matter completo (vedi FORMATO-CONTENUTO.md). 4) verifica che lo slug non esista gia' sul sito. 5) python publish.py --dry-run contenuti/<slug>.md. 6) python publish.py contenuti/<slug>.md, che pubblica online e imposta la copertina; se la copertina non si genera, pubblica comunque il testo e annotalo. 7) sposta la voce da Coda a Pubblicati in <NOME-FILE-CODA>.md con data e ID. 8) cancella contenuti/<slug>.md e immagini/<slug>.png. Ultima riga di output: OGGI: <slug> - id=<id> oppure OGGI: niente - <motivo>." --allowedTools "Read,Write,Edit,Glob,Grep,Bash(python publish.py:*),Bash(python featured.py:*),Bash(rm:*),Bash(ssh <ALIAS-SSH> <COMANDO-WP-CLI-DI-LETTURA> post list:*)" --max-turns 50 --output-format text >> "%LOGFILE%" 2>&1
+
+echo --- fine %date% %time% exit=%errorlevel% >> "%LOGFILE%"

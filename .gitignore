@@ -1,0 +1,32 @@
+# Segreti: chiavi API dei provider immagine
+.env
+.env.*
+!.env.example
+
+# Configurazione locale: punta a un server e un WP reali
+config.yml
+
+# Automazione locale: dominio, percorsi e utenti reali incorporati nel prompt
+daily.cmd
+weekly.cmd
+
+# Contenuti ed elaborati: dati di lavoro, non codice del progetto
+contenuti/*
+!contenuti/.gitkeep
+immagini/*
+!immagini/.gitkeep
+log/
+
+# Piano editoriale e istruzioni di progetto: specifici del sito che li usa
+argomenti.md
+piano-editoriale.md
+home-simonecosci-copy.md
+CLAUDE.md
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+Thumbs.db

@@ -1,0 +1,9 @@
+# Copia questo file in config.yml e personalizzalo. config.yml non va in git
+# (è già in .gitignore): contiene il dominio e i percorsi reali del tuo sito.
+
+ssh: my-vps                            # alias in ~/.ssh/config, oppure "utente@host"
+path: /var/www/example.com/wordpress   # percorso assoluto dell'installazione WordPress
+cli: sudo -u www-data wp               # utente proprietario dei file (evita permessi da root
+                                        # dentro wp-content); in alternativa: "wp --allow-root"
+author: 1                              # ID dell'utente WordPress che firma i contenuti
+                                        # (si legge con: wp user list --fields=ID,user_login)
