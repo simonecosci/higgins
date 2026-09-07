@@ -35,6 +35,55 @@ anche scrivendo i `.md` a mano.
 Windows, macOS, Linux: funziona ovunque ci sia un client SSH (su Windows, OpenSSH è
 già incluso da anni) e Python.
 
+## Configurare l'accesso SSH
+
+`config.yml` ha un campo `ssh:` che può essere `utente@host` diretto, oppure — meglio,
+perché non lega il progetto a un utente o un IP scritti a mano — un **alias** definito
+nel file di configurazione del tuo client SSH. Se non l'hai mai toccato, eccolo:
+
+**1. Una chiave, se non ne hai già una.** Su qualsiasi sistema:
+```bash
+ssh-keygen -t ed25519 -C "il-tuo-nome"
+```
+Invio a tutte le domande va bene (percorso di default, nessuna passphrase se preferisci
+non doverla digitare ogni volta). Genera due file in `~/.ssh/`: `id_ed25519` (privata,
+non esce mai da lì) e `id_ed25519.pub` (pubblica, quella che va sul server).
+
+**2. La chiave pubblica sul server.** Da Linux/macOS:
+```bash
+ssh-copy-id -p 22 utente@tuoserver.it
+```
+Da Windows (PowerShell, se non hai `ssh-copy-id`):
+```powershell
+type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh utente@tuoserver.it "cat >> ~/.ssh/authorized_keys"
+```
+Ti chiederà la password dell'utente **un'ultima volta** — dopo, l'accesso è solo a
+chiave.
+
+**3. L'alias, nel file `config` (senza estensione) dentro `~/.ssh/`.** Su Windows è
+`C:\Users\<tu>\.ssh\config`; se la cartella o il file non esistono, creali (un editor
+di testo qualsiasi va bene, basta che salvi senza `.txt` in fondo). Un blocco per ogni
+server:
+
+```
+Host my-vps
+    HostName tuoserver.it
+    User utente
+    Port 22
+    IdentityFile ~/.ssh/id_ed25519
+```
+
+`Host` è il nome che ti inventi tu — è quello che poi scrivi in `config.yml` sotto
+`ssh:`. `Port` serve solo se il server non usa la 22 di default; altrimenti si omette.
+
+**4. Verifica.** `ssh my-vps` deve collegarti **senza chiedere password**. Se funziona,
+`config.yml` può avere semplicemente `ssh: my-vps`, e ogni comando dello script userà
+automaticamente quella chiave, quell'utente, quella porta — senza doverli ripetere né
+in `config.yml` né altrove.
+
+Un solo alias per server è comodo anche perché lo stesso file `~/.ssh/config` può
+contenere più `Host`, uno per ogni sito che gestisci con più copie di questo progetto.
+
 ## Avvio rapido
 
 ```bash
