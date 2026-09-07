@@ -1,4 +1,6 @@
-# wp-publish
+<p align="center"><img src="logo.jpg" width="420" alt="Higgins"></p>
+
+# Higgins
 
 Scrivi pagine e articoli in Markdown, in locale. Uno script li pubblica su WordPress
 via SSH + WP-CLI. Un secondo script genera la copertina di ogni articolo con un
@@ -36,8 +38,8 @@ già incluso da anni) e Python.
 ## Avvio rapido
 
 ```bash
-git clone <questo-repo>
-cd wp-publish
+git clone https://github.com/simonecosci/higgins.git
+cd higgins
 pip install markdown pyyaml Pillow
 
 cp config.example.yml config.yml
@@ -54,7 +56,7 @@ niente viene scritto sul sito finché non lanci lo stesso comando senza `--dry-r
 ## Struttura
 
 ```
-wp-publish/
+higgins/
 ├── contenuti/            # un .md per pagina/articolo, nome file = slug
 ├── immagini/              # copertine generate, <slug>.png (create in automatico)
 ├── publish.py             # pubblica: legge contenuti/, scrive su WordPress via SSH
